@@ -6,6 +6,7 @@ resource "aws_route53_zone" "private" {
 
 // Configure internal DNS
 resource "aws_route53_record" "platform_private" {
+  count   = "${var.internet_facing == "external" ? 0 : 1 }"
   zone_id = "${aws_route53_zone.private.zone_id}"
   name    = "*.${var.platform_internal_subdomain}"
   type    = "A"
@@ -23,8 +24,8 @@ resource "aws_route53_record" "master_private" {
   type    = "A"
 
   alias {
-    name                   = "${var.master_lb_dns_name}"
-    zone_id                = "${var.master_lb_zone_id}"
+    name                   = "${var.master_private_lb_dns_name}"
+    zone_id                = "${var.master_private_lb_zone_id}"
     evaluate_target_health = false
   }
 }
@@ -68,6 +69,6 @@ resource "aws_route53_record" "master_record" {
   ttl     = "300"
 
   records = [
-    "${var.master_lb_dns_name}",
+    "${var.master_public_lb_dns_name}",
   ]
 }

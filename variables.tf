@@ -12,11 +12,17 @@ variable "platform_lb_zone_id" {}
 
 variable "platform_lb_dns_name" {}
 
-variable "master_lb_name" {}
+variable "master_private_lb_name" {}
 
-variable "master_lb_zone_id" {}
+variable "master_private_lb_zone_id" {}
 
-variable "master_lb_dns_name" {}
+variable "master_private_lb_dns_name" {}
+
+variable "master_public_lb_name" {}
+
+variable "master_public_lb_zone_id" {}
+
+variable "master_public_lb_dns_name" {}
 
 variable "tags" {
   type = "map"
