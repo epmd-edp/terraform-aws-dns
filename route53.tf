@@ -31,13 +31,13 @@ resource "aws_route53_record" "master_private" {
 
 // Configure external DNS
 data "aws_route53_zone" "wildcard_zone" {
-  count        = "${var.internet_facing == "exteral" ? 1 : 0 }"
+  count        = "${var.internet_facing == "external" ? 1 : 0 }"
   name         = "${var.platform_external_subdomain}"
   private_zone = false
 }
 
 resource "aws_route53_record" "wildcard_record" {
-  count   = "${var.internet_facing == "exteral" ? 1 : 0 }"
+  count   = "${var.internet_facing == "external" ? 1 : 0 }"
   zone_id = "${data.aws_route53_zone.wildcard_zone.zone_id}"
   name    = "*.${var.platform_name}.${data.aws_route53_zone.wildcard_zone.name}"
   type    = "CNAME"
@@ -49,7 +49,7 @@ resource "aws_route53_record" "wildcard_record" {
 }
 
 resource "aws_route53_record" "wildcard_subdomain_record" {
-  count   = "${var.internet_facing == "exteral" ? 1 : 0 }"
+  count   = "${var.internet_facing == "external" ? 1 : 0 }"
   zone_id = "${data.aws_route53_zone.wildcard_zone.zone_id}"
   name    = "${var.platform_name}.${data.aws_route53_zone.wildcard_zone.name}"
   type    = "CNAME"
@@ -61,7 +61,7 @@ resource "aws_route53_record" "wildcard_subdomain_record" {
 }
 
 resource "aws_route53_record" "master_record" {
-  count   = "${var.internet_facing == "exteral" ? 1 : 0 }"
+  count   = "${var.internet_facing == "external" ? 1 : 0 }"
   zone_id = "${data.aws_route53_zone.wildcard_zone.zone_id}"
   name    = "master.${var.platform_name}.${data.aws_route53_zone.wildcard_zone.name}"
   type    = "CNAME"
