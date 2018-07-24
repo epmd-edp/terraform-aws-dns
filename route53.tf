@@ -1,12 +1,13 @@
 resource "aws_route53_zone" "private" {
-  name   = "${var.platform_default_subdomain}"
+  name   = "${var.platform_internal_subdomain}"
   vpc_id = "${var.platform_vpc_id}"
   tags   = "${merge(var.tags, map("Name", "${var.platform_name}-private"))}"
 }
 
-resource "aws_route53_record" "platform" {
+// Configure internal DNS
+resource "aws_route53_record" "platform_private" {
   zone_id = "${aws_route53_zone.private.zone_id}"
-  name    = "*.${var.platform_default_subdomain}"
+  name    = "*.${var.platform_internal_subdomain}"
   type    = "A"
 
   alias {
@@ -16,9 +17,9 @@ resource "aws_route53_record" "platform" {
   }
 }
 
-resource "aws_route53_record" "master" {
+resource "aws_route53_record" "master_private" {
   zone_id = "${aws_route53_zone.private.zone_id}"
-  name    = "${var.master_dns_name}"
+  name    = "master.${var.platform_internal_subdomain}"
   type    = "A"
 
   alias {
@@ -26,4 +27,47 @@ resource "aws_route53_record" "master" {
     zone_id                = "${var.master_lb_zone_id}"
     evaluate_target_health = false
   }
+}
+
+// Configure external DNS
+data "aws_route53_zone" "wildcard_zone" {
+  count        = "${var.internet_facing == "exteral" ? 1 : 0 }"
+  name         = "${var.platform_external_subdomain}"
+  private_zone = false
+}
+
+resource "aws_route53_record" "wildcard_record" {
+  count   = "${var.internet_facing == "exteral" ? 1 : 0 }"
+  zone_id = "${data.aws_route53_zone.wildcard_zone.zone_id}"
+  name    = "*.${var.platform_name}.${data.aws_route53_zone.wildcard_zone.name}"
+  type    = "CNAME"
+  ttl     = "300"
+
+  records = [
+    "${var.platform_lb_dns_name}",
+  ]
+}
+
+resource "aws_route53_record" "wildcard_subdomain_record" {
+  count   = "${var.internet_facing == "exteral" ? 1 : 0 }"
+  zone_id = "${data.aws_route53_zone.wildcard_zone.zone_id}"
+  name    = "${var.platform_name}.${data.aws_route53_zone.wildcard_zone.name}"
+  type    = "CNAME"
+  ttl     = "300"
+
+  records = [
+    "${var.platform_lb_dns_name}",
+  ]
+}
+
+resource "aws_route53_record" "master_record" {
+  count   = "${var.internet_facing == "exteral" ? 1 : 0 }"
+  zone_id = "${data.aws_route53_zone.wildcard_zone.zone_id}"
+  name    = "master.${var.platform_name}.${data.aws_route53_zone.wildcard_zone.name}"
+  type    = "CNAME"
+  ttl     = "300"
+
+  records = [
+    "${var.master_lb_dns_name}",
+  ]
 }
