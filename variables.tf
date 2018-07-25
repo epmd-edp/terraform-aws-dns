@@ -4,7 +4,9 @@ variable "platform_name" {}
 
 variable "platform_internal_subdomain" {}
 
-variable "platform_external_subdomain" {}
+variable "platform_external_subdomain" {
+  default = ""
+}
 
 variable "platform_lb_name" {}
 
