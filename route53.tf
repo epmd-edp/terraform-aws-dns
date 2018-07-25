@@ -49,18 +49,6 @@ resource "aws_route53_record" "wildcard_record" {
   ]
 }
 
-resource "aws_route53_record" "wildcard_subdomain_record" {
-  count   = "${var.internet_facing == "external" ? 1 : 0 }"
-  zone_id = "${data.aws_route53_zone.wildcard_zone.zone_id}"
-  name    = "${var.platform_name}.${data.aws_route53_zone.wildcard_zone.name}"
-  type    = "CNAME"
-  ttl     = "300"
-
-  records = [
-    "${var.platform_lb_dns_name}",
-  ]
-}
-
 resource "aws_route53_record" "master_record" {
   count   = "${var.internet_facing == "external" ? 1 : 0 }"
   zone_id = "${data.aws_route53_zone.wildcard_zone.zone_id}"
