@@ -7,8 +7,8 @@ resource "aws_route53_zone" "private_zone" {
 }
 
 data "aws_route53_zone" "private_zone" {
-  count        = "${var.create_internal_zone == false && var.platform_internal_subdomain != "" ? 1 : 0 }"
-  name         = "${var.platform_external_subdomain}"
+  count        = "${!var.create_internal_zone && var.platform_internal_subdomain != "" ? 1 : 0 }"
+  name         = "${var.platform_internal_subdomain}"
   private_zone = true
 }
 
