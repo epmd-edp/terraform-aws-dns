@@ -8,6 +8,7 @@ resource "aws_route53_zone" "private_zone" {
 
 data "aws_route53_zone" "private_zone" {
   count        = "${!var.create_internal_zone && var.platform_internal_subdomain != "" ? 1 : 0 }"
+  vpc_id       = "${var.platform_vpc_id}"
   name         = "${var.platform_internal_subdomain}"
   private_zone = true
 }
