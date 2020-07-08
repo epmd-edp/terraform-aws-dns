@@ -1,0 +1,7 @@
+Verified+1: CI Jenkins
+Code-Review+2: Viktor Voronin <viktor_voronin@epam.com>
+Submitted-by: Viktor Voronin <viktor_voronin@epam.com>
+Submitted-at: Wed, 08 Jul 2020 18:15:26 +0000
+Reviewed-on: https://gerrit-oc-green-edp-cicd.delivery.aws.main.edp.projects.epam.com/c/terraform-aws-dns/+/3502
+Project: terraform-aws-dns
+Branch: refs/heads/demo-cluster
