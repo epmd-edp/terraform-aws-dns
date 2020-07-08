@@ -123,6 +123,6 @@ resource "aws_route53_record" "public_docker_registry" {
   ttl     = "300"
 
   records = [
-    "${var.platform_lb_dns_name}",
+    "${var.docker_registry_lb_dns_name}",
   ]
 }

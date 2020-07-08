@@ -28,6 +28,8 @@ variable "platform_lb_zone_id" {}
 
 variable "platform_lb_dns_name" {}
 
+variable "docker_registry_lb_dns_name" {}
+
 variable "platform_alb_name" {}
 
 variable "platform_alb_zone_id" {}
